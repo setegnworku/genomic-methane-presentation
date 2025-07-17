@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI + Genomics to Cut Livestock Methane</title>
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPTYE7RK4M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-VPTYE7RK4M');
+    </script>
     <style>
         * {
             margin: 0;
@@ -517,6 +526,15 @@
                 updateProgressBar();
                 updateStatus(`Slide ${currentSlide + 1} of ${totalSlides}`);
                 
+                // Track slide views
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'slide_viewed', {
+                        event_category: 'engagement',
+                        event_label: `slide_${n + 1}`,
+                        value: n + 1
+                    });
+                }
+                
                 if (speechEnabled && isPlaying) {
                     speakText(speechTexts[currentSlide]);
                 }
@@ -592,6 +610,14 @@
             document.getElementById('startOverlay').style.display = 'none';
             updateStatus('Presentation running...');
             showSlide(0);
+            
+            // Track presentation start
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'presentation_started', {
+                    event_category: 'engagement',
+                    event_label: 'genomic_methane_presentation'
+                });
+            }
         }
         
         function stopPresentation() {
@@ -602,6 +628,15 @@
             }
             updateStatus('Presentation stopped');
             document.getElementById('currentSpeechText').textContent = 'Presentation stopped.';
+            
+            // Track presentation completion
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'presentation_completed', {
+                    event_category: 'engagement',
+                    event_label: 'genomic_methane_presentation',
+                    value: currentSlide + 1
+                });
+            }
         }
         
         function restartPresentation() {
@@ -623,6 +658,14 @@
                 if (isPlaying && !speechSynth.speaking && speechTexts[currentSlide]) {
                     speakText(speechTexts[currentSlide]);
                 }
+                
+                // Track audio enabled
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'audio_enabled', {
+                        event_category: 'interaction',
+                        event_label: 'speech_synthesis'
+                    });
+                }
             } else {
                 btn.textContent = '🔇 Audio Off';
                 if (speechSynth.speaking) {
@@ -631,6 +674,14 @@
                 const speechDisplay = document.getElementById('currentSpeechText');
                 if (speechDisplay) {
                     speechDisplay.textContent = 'Audio disabled.';
+                }
+                
+                // Track audio disabled
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'audio_disabled', {
+                        event_category: 'interaction',
+                        event_label: 'speech_synthesis'
+                    });
                 }
             }
         }
